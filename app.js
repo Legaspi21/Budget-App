@@ -19,9 +19,17 @@ var budgetController = (function(){
 
 
 // UI CONTROLLER
-var UIController = (function(){
+var UIController = (function() {
 	
-	// some code
+	return {
+		getInput: function() {
+			return {
+				type: document.querySelector('.add__type').value, // will be either inc or exp
+				description: document.querySelector('.add__description').value,
+				value: document.querySelector('.add__value').value
+			}
+		}
+	}
 
 })();
 
@@ -32,7 +40,8 @@ var controller = (function(budgetCtrl, UICtrl) {
 
 	var ctrlAddItem = function() {
 		// Get field input data
-
+			var input = UICtrl.getInput();
+			console.log(input);
 		// add item to the budget controller
 
 		// add the item to UI
@@ -50,7 +59,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 		if (event.keycode === 13 || event.which === 13) {
 			ctrlAddItem();
 		}
-
+		
 	})
 
 })(budgetController, UIController);
