@@ -21,12 +21,18 @@ var budgetController = (function(){
 // UI CONTROLLER
 var UIController = (function() {
 	
+	var DOMstrings = {
+		inputType: '.add__type',
+		inputDescription: '.add__description',
+		inputValue: '.add__value'
+	}
+
 	return {
 		getInput: function() {
 			return {
-				type: document.querySelector('.add__type').value, // will be either inc or exp
-				description: document.querySelector('.add__description').value,
-				value: document.querySelector('.add__value').value
+				type: document.querySelector(DOMstrings.inputType).value, // will be either inc or exp
+				description: document.querySelector(DOMstrings.inputDescription).value,
+				value: document.querySelector(DOMstrings.inputValue).value
 			}
 		}
 	}
