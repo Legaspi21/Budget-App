@@ -226,16 +226,24 @@ var controller = (function(budgetCtrl, UICtrl) {
 	};
 
 	var ctrlDeleteItem = function(event) {
-		var itemID;
+		var itemID, splitID, type, ID;
 
 		itemID = event.target.parentNode.parentNode.parentNode.parentNode.id
 
 		if (itemID) {
 			
-			
+			splitID = itemID.split('-');
+			type = splitID[0];
+			ID = splitID[1];
+
+			// Delete item from the data structure
+
+			// Delete the item from the UI
+
+			// Update and show the new budget
 
 		}
-	}
+	};
 
 	return {
 		init: function() {
