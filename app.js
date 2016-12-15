@@ -161,9 +161,30 @@ var UIController = (function() {
 		expensesPercLabel: '.item__percentage'
 	};
 
-	return {
-		getInput: function() {
-			return {
+	var formatNumber = function(num, type) {
+
+		var numSplit, int, dec, type;
+
+		num = Math.abs(num);
+		num = num.toFixed(2);
+
+		numSplit = num.split('.');
+
+		int = numSplit[0];
+
+		if (int.length > 3) {
+				int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3); //in 2333
+			}
+
+			dec = numSplit[1];
+
+			return (type === 'expense' ? '-' : '+') + ' ' + int + '.' + dec;
+
+		};
+
+		return {
+			getInput: function() {
+				return {
 				type: document.querySelector(DOMstrings.inputType).value, // will be either inc or exp
 				description: document.querySelector(DOMstrings.inputDescription).value,
 				value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
@@ -173,19 +194,19 @@ var UIController = (function() {
 		addListItem: function(obj,type) {
 			var html, newHtml,element, fields, fieldsArr;
 			// Create html string with placeholder text
-				if (type == 'income') {
-					element = DOMstrings.incomeContainer;
-					html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-				} else if (type === 'expense') {
-					element = DOMstrings.expensesContainer;
-					html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
-				}     
+			if (type == 'income') {
+				element = DOMstrings.incomeContainer;
+				html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+			} else if (type === 'expense') {
+				element = DOMstrings.expensesContainer;
+				html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+			}     
 			// Replace the placeholder text with some actual data
-					newHtml = html.replace('%id%', obj.id);
-					newHtml = newHtml.replace('%description%', obj.description);
-					newHtml = newHtml.replace('%value%', obj.value);
+			newHtml = html.replace('%id%', obj.id);
+			newHtml = newHtml.replace('%description%', obj.description);
+			newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 			// Insert the HTML
-				document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);	
+			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);	
 		},
 
 		deleteListItem: function(selectorID) {
@@ -208,10 +229,13 @@ var UIController = (function() {
 		},
 
 		displayBudget: function(obj) {
+			var type;
 
-			document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-			document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalIncome;
-			document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExpense;
+			obj.budget > 0 ? type = 'income' : type = 'expense';
+			
+			document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+			document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalIncome, 'income');
+			document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExpense, 'expense');
 			
 			
 			if (obj.percentage > 0) {
@@ -221,7 +245,7 @@ var UIController = (function() {
 			}
 		},
 
-		displayPercentages: function() {
+		displayPercentages: function(percentages) {
 
 			var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 			
@@ -232,6 +256,7 @@ var UIController = (function() {
 			};
 
 			nodeListForEach(fields, function(current, index) {
+
 				if(percentages[index] > 0) {
 					current.textContent = percentages[index] + '%';
 				} else {
@@ -284,6 +309,7 @@ var controller = (function(budgetCtrl, UICtrl) {
 		// read percentages from budget controller
 		var percentages = budgetCtrl.getPercentages();
 		// update the UI with the new percentages
+		UICtrl.displayPercentages(percentages);
 
 	};
 
