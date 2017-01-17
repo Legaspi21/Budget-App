@@ -1,6 +1,9 @@
 # Budget-App
 A lightweight budget calculator powered by vanilla Javascript
 
+## Live Link
+[Budget-App](http://aidanlegaspi.com/budget-app)
+
 ## User stories
 
 #### - A user can log incomes
